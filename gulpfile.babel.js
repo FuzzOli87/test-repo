@@ -7,21 +7,16 @@ import bumpVersion from 'gulp-bump';
 import runSequence from 'run-sequence';
 import del from 'del';
 import todo from 'gulp-todo';
-import git from 'gulp-git';
+import git from 'gulp-git-streamed';
 import fs from 'fs';
 
-// Get local files for options
-import babelRC from './.babelrc';
-import eslintRC from './.eslintrc'
-
-delete babelRC.sourceMaps;
-
-const BABEL_OPTIONS = babelRC;
 /* ************************************************************************* */
 /* Helpers                                                                   */
 /* ************************************************************************* */
 
 const getPackageJSON = () => JSON.parse(fs.readFileSync('./package.json', 'utf8'));
+const getBabelRC = () => JSON.parse(fs.readFileSync('./.babelrc', 'utf8'));
+
 /*
 * Generate and add todo task before committing.
 */
@@ -47,12 +42,16 @@ const copy = (fileGlob, destDir) => gulp.src(fileGlob)
 /*
 * Hook transpiling step to gulpSrc passed in.
 */
-const transpile = (fileGlob, destDir) => gulp.src(fileGlob)
-  .pipe(sourcemaps.init())
-  .pipe(babel(BABEL_OPTIONS))
-  .pipe(sourcemaps.write('.'))
-  .pipe(gulp.dest(destDir));
+const transpile = (fileGlob, destDir) => {
+  const babelRC = JSON.parse(JSON.stringify(getBabelRC()));
+  delete babelRC.sourceMaps;
 
+  return gulp.src(fileGlob)
+    .pipe(sourcemaps.init())
+    .pipe(babel(babelRC))
+    .pipe(sourcemaps.write('.'))
+    .pipe(gulp.dest(destDir));
+};
 /*
 * Count lines. Not implemented.
 */
@@ -137,10 +136,10 @@ gulp.task('git-bump-tag', () => {
   const describeOpts = { args: '--tags --always --abbrev=1 --dirty=-d' };
 
   return add('./package.json')
-    .pipe(commit(commitMsg))
+    .pipe(commit(commitMsg));
     .pipe(git.tag(version, tagMsg, gitCB))
     .pipe(describe(describeOpts))
-    .pipe(push)
+    .pipe(push);
 });
 
 /*
