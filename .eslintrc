@@ -1,0 +1,13 @@
+{
+  "extends": "airbnb/base",
+  "parser": "babel-eslint",
+  "plugins": [
+    "babel"
+  ],
+  "rules": {
+    "babel/object-shorthand": 1,
+    "new-cap": [2, {"capIsNew": false}],
+    "comma-dangle": 0, 
+    "arrow-body-style": 0
+  }
+}
