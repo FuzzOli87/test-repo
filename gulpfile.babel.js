@@ -118,28 +118,28 @@ const bump = (importance, tag) => gulp.src('./package.json')
 /*
 * Release tasks.
 */
-const commit = msg => git.commit(msg);
-const add = glob => gulp.src(glob).pipe(git.add());
-const describe = options => git.exec(options);
-const push = () => git.push();
 const gitCB = err => {
   if (err) {
     throw err;
   }
 };
+const commit = msg => git.commit(msg);
+const add = glob => gulp.src(glob).pipe(git.add());
+const describe = options => git.exec(options, gitCB);
+const push = () => git.push();
 
 gulp.task('git-bump-tag', () => {
   const pkg = getPackageJSON();
   const version = `v${pkg.version}`;
   const commitMsg = `Release ${version}`;
   const tagMsg = `Version ${pkg.version}`;
-  const describeOpts = { args: '--tags --always --abbrev=1 --dirty=-d' };
+  const describeOpts = { args: 'describe --tags --always --abbrev=1 --dirty=-d' };
 
   return add('./package.json')
-    .pipe(commit(commitMsg));
+    .pipe(commit(commitMsg))
     .pipe(git.tag(version, tagMsg, gitCB))
     .pipe(describe(describeOpts))
-    .pipe(push);
+    .pipe(push());
 });
 
 /*
