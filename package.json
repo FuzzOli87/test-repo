@@ -1,6 +1,6 @@
 {
   "name": "test-repo",
-  "version": "0.1.10",
+  "version": "0.1.11",
   "description": "A test repo to test stuff",
   "main": "index.js",
   "bin": {
@@ -46,7 +46,8 @@
     "jsonlint": "^1.6.2",
     "leasot": "^3.2.2",
     "run-sequence": "^1.1.5",
-    "source-map-support": "^0.4.0"
+    "source-map-support": "^0.4.0",
+    "through2": "^2.0.1"
   },
   "dependencies": {
     "babel-runtime": "^6.6.1"
