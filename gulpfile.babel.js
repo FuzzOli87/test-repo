@@ -7,7 +7,7 @@ import bumpVersion from 'gulp-bump';
 import runSequence from 'run-sequence';
 import del from 'del';
 import todo from 'gulp-todo';
-import git from 'gulp-git-streamed';
+import git from './gitStreamed';
 import fs from 'fs';
 
 /* ************************************************************************* */
