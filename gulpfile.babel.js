@@ -126,7 +126,7 @@ const gitCB = err => {
 const commit = msg => git.commit(msg);
 const add = glob => gulp.src(glob).pipe(git.add());
 const describe = options => git.exec(options, gitCB);
-const push = () => git.push();
+const push = opts => git.push(null, null, opts);
 
 gulp.task('git-bump-tag', () => {
   const pkg = getPackageJSON();
@@ -139,7 +139,7 @@ gulp.task('git-bump-tag', () => {
     .pipe(commit(commitMsg))
     .pipe(git.tag(version, tagMsg, gitCB))
     .pipe(describe(describeOpts))
-    .pipe(push());
+    .pipe(push({ args: '--tags' }));
 });
 
 /*
